@@ -15,7 +15,8 @@ if(domain==='language'){
  conflicts=(u.conflictIndex[id]||[]).map(i=>u.conflicts[i]);
 }else{const d=await get('signs-and-scripts.json');N=d.nodes;S=d.sources;E=d.assertions;notes=d.notes.filter(x=>x.nodes.includes(id));usage=d.usage.filter(x=>x.script===id);}
 const n=N[id];if(!n||(domain!=='language'&&n.domain!==domain)){$('variant-content').innerHTML='<h1>Record not found</h1><p>This URL does not identify a record in this section.</p><a href="'+listURL+'">Return to the variant list</a>';return;}
-document.title=n.name+' · Lang Log by yoshi';
+// Keep the title suffix record.html was written with (tools/site_brand.py).
+document.title=n.name+document.title.slice(document.title.lastIndexOf(' · '));
 const url=i=>'record.html?domain='+domain+'&id='+encodeURIComponent(i),nl=i=>N[i]?`<a href="${esc(url(i))}">${esc(N[i].name)}</a>`:esc(i),sl=s=>S[s]?`<a href="${esc(S[s].url)}" target="_blank" rel="noopener noreferrer">${esc(S[s].title)}</a>`:esc(s);
 const incoming=E.filter(e=>e.child===id&&e.parent),outgoing=E.filter(e=>e.parent===id),aliases=n.names||n.aliases||[],native=n.nativeNames||[];
 const evidence=e=>`<div class="evidence-card"><strong>${nl(e.parent)}</strong><p>According to ${sl(e.source)}</p>${e.kind?'<p>'+esc(e.kind)+'</p>':''}${e.status&&e.status!=='reported'?'<p>Status: '+esc(e.status)+'</p>':''}${e.hypothesis?'<p>'+esc(e.hypothesis)+'</p>':''}${e.sample?'<p>Source sample: '+esc(e.sample)+'</p>':''}${e.run?'<p>Run: '+esc(e.run)+'</p>':''}${e.posterior!=null?'<p>Posterior: '+esc(e.posterior)+'</p>':''}${e.reportedVia?'<p>Reported and discussed in '+sl(e.reportedVia)+'</p>':''}</div>`;
